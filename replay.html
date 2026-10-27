@@ -1189,7 +1189,9 @@ function render() {
     tl.items.forEach(it => {
       if (it.kind === 'event') {
         const p = document.createElement('p'); p.className = 'note';
-        p.textContent = it.ev.type === 'undo' ? `↩ 世代${it.ev.g}に戻った` : it.ev.type;
+        p.textContent = it.ev.type === 'undo' ? `↩ 世代${it.ev.g}に戻った`
+          : it.ev.type === 'drop' ? `↔ 世代${it.ev.g}: ${it.ev.side === 'left' ? '左' : '右'}の画像を、全個体の #${it.ev.id} に差し替えた`
+          : it.ev.type;
         fig.appendChild(p); return;
       }
       const d = document.createElement('div'); d.className = 'gen' + (it.text === undefined ? ' final' : '');

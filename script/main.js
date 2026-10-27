@@ -16,6 +16,7 @@ import {setFitnessScore as setFitnessScore, makeEvaluateRule} from "./_evaluate.
 import getTables from "./_getTables.js";
 // 評価実験を有効にする場合、このインポートを適用する
 import * as Estimation from "./_estimation.js"
+import { recordShown, recordEvaluate } from "./_history.js"; // 評価実験用: 画像の遺伝子・評価文の履歴
 
 	/* ========================
 	下準備 各種データを取り込み
@@ -113,6 +114,7 @@ function main() {
 				) {
 					// 実装時はここにappendChildメソッドを置く
 					document.getElementById('compareImages_1').appendChild(newCanvas);
+					recordShown(1, (firstGenDrawCount == population.bestChromId) ? 'best' : 'pickup', population.chroms[firstGenDrawCount]);
 				}
 				// 全部みたいときはここにappendChildメソッドを置く
 	
@@ -164,6 +166,7 @@ function main() {
 			// ロード画面を表示させるため、わずかに遅延させる
 			setTimeout(() => {
 				let evaluateText = elemAreaUserEvaluate.value;
+				recordEvaluate(population.index, evaluateText);
 				makeEvaluateRule(kuromojiTokenizer, evaluateText, population);
 				population.chroms.forEach((chrom, i) => {
 					setFitnessScore(chrom);
@@ -239,6 +242,7 @@ function main() {
 					newCanvas.setAttribute('height', 384);
 					drawCanvas(newCanvas, population.chroms[chromId]);
 					document.getElementById(`compareImages_${population.index}`).appendChild(newCanvas);
+					recordShown(population.index, (i == 0) ? 'best' : 'pickup', population.chroms[chromId]);
 				});
 
 
@@ -290,4 +294,3 @@ function fixChromString(value) {
 		return Number(value);
 	}
 }
-

@@ -1,4 +1,5 @@
 // #MARK: 評価実験 (Googleフォーム収集版)
+import { getHistory } from './_history.js';
 // 先輩システム・自分のシステムの両方で同じファイルを使える。違いは CONFIG だけ。
 
 // ============================================================
@@ -24,7 +25,7 @@ const CONFIG = {
 	},
 	// 送信完了後に自動で移動する先。{id} は参加者IDに置き換わる
 	//  先輩システム → 自分のシステムのURL / 自分のシステム → 最終アンケートのURL
-	nextUrl: 'https://example.com/next/?id={id}',
+	nextUrl: 'https://example.com/final/?id={id}',
 	// 事前アンケートが未回答のとき戻す先(不要なら空文字)。pre.html のURLなど
 	preUrl: ''
 };
@@ -43,6 +44,9 @@ function getParticipantId() {
 }
 
 const elemValidateBtn = document.getElementById('validate');
+// システムの読み込み(AIモデルなど)が終わる前に送信ボタンが押されても反応するよう、
+// モジュール読み込み時点でクリックを受け付ける
+if (elemValidateBtn) elemValidateBtn.addEventListener('click', validate);
 
 export function enableEstimation() {
 	// 事前アンケート未回答なら先にそちらへ
@@ -52,16 +56,17 @@ export function enableEstimation() {
 		return;
 	}
 
-	const label = document.createElement('label');
-	label.setAttribute('for', 'form_exp');
-	label.innerText = '評価実験';
-	document.getElementsByClassName('header-control')[0].appendChild(label);
+	if (CONFIG.role !== 'mine') {
+		const label = document.createElement('label');
+		label.setAttribute('for', 'form_exp');
+		label.innerText = '評価実験';
+		document.getElementsByClassName('header-control')[0].appendChild(label);
+	}
 	document.getElementById('estimation').removeAttribute('hidden');
 
 	const elemId = document.getElementById('student_num');
 	if (elemId) elemId.value = getParticipantId();
 
-	elemValidateBtn.addEventListener('click', validate);
 }
 
 function validate() {
@@ -77,7 +82,22 @@ function validate() {
 			wrapper.classList.add('error');
 		}
 	});
-	if (hasError) { elemValidateBtn.classList.add('error'); return; }
+	if (hasError) {
+		elemValidateBtn.classList.add('error');
+		const first = document.querySelector('#estimation dd.error');
+		if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		let msg = document.getElementById('validate-msg');
+		if (!msg) {
+			msg = document.createElement('p');
+			msg.id = 'validate-msg';
+			msg.style.cssText = 'color:#d32f2f;font-weight:bold;margin-top:8px';
+			elemValidateBtn.parentElement.appendChild(msg);
+		}
+		msg.innerText = '未回答の必須項目があります(赤くなっている質問)。';
+		return;
+	}
+	const oldMsg = document.getElementById('validate-msg');
+	if (oldMsg) oldMsg.remove();
 	elemValidateBtn.classList.remove('error');
 	send();
 }
@@ -91,6 +111,7 @@ function buildLog(pid) {
 		participantId: pid,
 		sentAt: new Date().toISOString(),
 		generations: evaluations.length,
+		history: getHistory(),
 		evaluations
 	});
 }

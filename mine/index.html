@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <title>対話型 背景画像生成システム</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="自然言語での評価を取り入れた対話型遺伝的アルゴリズム（IGA）による画像生成システムの評価実験用ページです。">
+    <link rel="shortcut icon" href="./assets/images/favicon.png" type="image/x-icon">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="format-detection" content="email=no,telephone=no,address=no">
+
+    <link rel="stylesheet" href="./style/ress_min.css">
+    <link rel="stylesheet" href="./style/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-icon" style="font-weight: bold; font-size: 1.2rem; margin-left: 10px; color: #333;">
+            対話型 背景画像生成システム
+        </div>
+        <div class="header-control">
+            <!-- 戻るボタン（最初は非表示） -->
+            <button id="btn-undo" style="background: #dc3545; color: #fff; font-weight: bold; display: none;">1つ前に戻る</button>
+            
+            <button onclick="document.getElementById('estimation').removeAttribute('hidden'); window.scrollTo(0, document.body.scrollHeight);" style="background: #0056b3; color: #fff; font-weight: bold;">評価実験</button>
+            <button id="toggleTheme">テーマ</button>
+            <button id="toggleManual">使い方</button>
+        </div>
+    </header>
+    <main id="main">
+        <p id="msg-ReadFiles" class="msg-loading">必要なファイルを読み込んでいます...</p>
+        <!-- _appendGenCycle.jsで自動生成 -->
+    </main>
+    <div class="manualPopup" id="manualPopup">
+        <!-- 
+        #MARK: 使い方
+        -->
+        <h2>使い方</h2>
+        <ol>
+            <li><strong>最初のイメージ入力：</strong> 最初の画面にイメージを入力する欄があります。あなたが欲しい画像の雰囲気（色や柄など）をテキストで入力して生成を開始します。</li>
+            <li>2枚の画像が出現します。</li>
+            <img src="./assets/images/convasation_initial.png" alt="メイン画面">
+            <li>
+                出現した画像の下にテキストエリアがありますので、次世代に求めるものを入力してください。<br>
+            </li>
+            
+            <h3>入力について</h3>
+            <ul>
+                <li>文章は読点や改行、()で区切られます。</li>
+                <li>1文に趣旨は1つまでにすると、混乱を招きにくくなります。そのため、「だけど」「しかし」などは避け、別の文にすることを推奨します。</li>
+                <li>平易な語彙を使うと、文章を汲み取ってもらえやすくなります。</li>
+            </ul>
+            
+            <h3>入力例</h3>
+            <ul>
+                <li>出力に言及。例：「右が好き」「左は嫌い」など。</li>
+                <li>好き嫌い。例：「クールで好き」「ちかちかするのは嫌」など。</li>
+                <li>欲しいポイント。例：「もっとさわやかな感じが良い」など。</li>
+                <li><strong>色・図形の指定。例：「青くして」「赤と白にして」「丸にして」「三角と四角を使って」など。</strong><br>
+                    <span style="color: #d32f2f; font-size: 0.9em; font-weight: bold;">※ワンポイントアドバイス：色を指定する際は、「黄色」よりも「黄にして」「黄と黒」のようにシンプルに入力した方が、意図がより正確に反映されやすくなります。</span>
+                </li>
+                <li><strong>柄・質感の指定。例：「ストライプ柄にして」「チェック柄にして」「ドット柄にして」「ふわふわにして」「ネオンっぽくして」など。</strong></li>
+            </ul>
+
+            <h3>柄（模様）の種類について</h3>
+            <p>以下の柄の名前を評価文に入力することで、デザインに反映させることができます。</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px; justify-content: center;">
+                
+                <div style="width: 100px; display: flex; flex-direction: column; align-items: center;">
+                    <img src="./assets/images/pattern_stripe.png" alt="ストライプ" style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #ccc; border-radius: 4px; display: block;">
+                    <p style="font-size: 12px; margin-top: 5px; line-height: 1.4; min-height: 2.8em; text-align: center; width: 100%;">ストライプ</p>
+                </div>
+                <div style="width: 100px; display: flex; flex-direction: column; align-items: center;">
+                    <img src="./assets/images/pattern_windowpane.png" alt="ウィンドウペーン" style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #ccc; border-radius: 4px; display: block;">
+                    <p style="font-size: 12px; margin-top: 5px; line-height: 1.4; min-height: 2.8em; text-align: center; width: 100%;">ウィンドウペーン</p>
+                </div>
+                <div style="width: 100px; display: flex; flex-direction: column; align-items: center;">
+                    <img src="./assets/images/pattern_dot.png" alt="ドット" style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #ccc; border-radius: 4px; display: block;">
+                    <p style="font-size: 12px; margin-top: 5px; line-height: 1.4; min-height: 2.8em; text-align: center; width: 100%;">ドット</p>
+                </div>
+                <div style="width: 100px; display: flex; flex-direction: column; align-items: center;">
+                    <img src="./assets/images/pattern_showerdot.png" alt="シャワードット" style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #ccc; border-radius: 4px; display: block;">
+                    <p style="font-size: 12px; margin-top: 5px; line-height: 1.4; min-height: 2.8em; text-align: center; width: 100%;">シャワードット</p>
+                </div>
+                <div style="width: 100px; display: flex; flex-direction: column; align-items: center;">
+                    <img src="./assets/images/pattern_gingham.png" alt="ギンガムチェック" style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #ccc; border-radius: 4px; display: block;">
+                    <p style="font-size: 12px; margin-top: 5px; line-height: 1.4; min-height: 2.8em; text-align: center; width: 100%;">ギンガム<br>チェック</p>
+                </div>
+                <div style="width: 100px; display: flex; flex-direction: column; align-items: center;">
+                    <img src="./assets/images/pattern_houndstooth.png" alt="ハウンドトゥース（千鳥格子）" style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #ccc; border-radius: 4px; display: block;">
+                    <p style="font-size: 12px; margin-top: 5px; line-height: 1.4; min-height: 2.8em; text-align: center; width: 100%;">ハウンドトゥース<br>（千鳥格子）</p>
+                </div>
+                <div style="width: 100px; display: flex; flex-direction: column; align-items: center;">
+                    <img src="./assets/images/pattern_argyle.png" alt="アーガイル" style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #ccc; border-radius: 4px; display: block;">
+                    <p style="font-size: 12px; margin-top: 5px; line-height: 1.4; min-height: 2.8em; text-align: center; width: 100%;">アーガイル</p>
+                </div>
+                <div style="width: 100px; display: flex; flex-direction: column; align-items: center;">
+                    <img src="./assets/images/pattern_tartan.png" alt="タータンチェック" style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #ccc; border-radius: 4px; display: block;">
+                    <p style="font-size: 12px; margin-top: 5px; line-height: 1.4; min-height: 2.8em; text-align: center; width: 100%;">タータン<br>チェック</p>
+                </div>
+                <div style="width: 100px; display: flex; flex-direction: column; align-items: center;">
+                    <img src="./assets/images/pattern_madras.png" alt="マドラスチェック" style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #ccc; border-radius: 4px; display: block;">
+                    <p style="font-size: 12px; margin-top: 5px; line-height: 1.4; min-height: 2.8em; text-align: center; width: 100%;">マドラス<br>チェック</p>
+                </div>
+                <div style="width: 100px; display: flex; flex-direction: column; align-items: center;">
+                    <img src="./assets/images/pattern_clusterstripe.png" alt="クラスターストライプ" style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #ccc; border-radius: 4px; display: block;">
+                    <p style="font-size: 12px; margin-top: 5px; line-height: 1.4; min-height: 2.8em; text-align: center; width: 100%;">クラスター<br>ストライプ</p>
+                </div>
+                <div style="width: 100px; display: flex; flex-direction: column; align-items: center;">
+                    <img src="./assets/images/pattern_clubstripe.png" alt="クラブストライプ" style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #ccc; border-radius: 4px; display: block;">
+                    <p style="font-size: 12px; margin-top: 5px; line-height: 1.4; min-height: 2.8em; text-align: center; width: 100%;">クラブ<br>ストライプ</p>
+                </div>
+                <div style="width: 100px; display: flex; flex-direction: column; align-items: center;">
+                    <img src="./assets/images/pattern_multistripe.png" alt="マルチストライプ" style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #ccc; border-radius: 4px; display: block;">
+                    <p style="font-size: 12px; margin-top: 5px; line-height: 1.4; min-height: 2.8em; text-align: center; width: 100%;">マルチ<br>ストライプ</p>
+                </div>
+                
+            </div>
+
+            <li style="margin-top: 15px;"><strong>便利な機能の活用：</strong><br>
+                ・<strong>画像のズーム・回転：</strong> 画像はアップ（拡大）して細部を確認できます。また、「Shiftキー」を押しながら操作することで、画像を回転させることも可能です。<br>
+                ・<strong>固定（ロック）ボタン：</strong> 画像の横にあるボタンを押すと、気に入った「色」「形」「柄」を固定したまま次世代を生成できます。<br>
+                ・<strong>全個体表示：</strong> 「全20個体を表示」ボタンを押すと、裏で生成された他のデザインを確認でき、ドラッグ＆ドロップで別の親として指名することも可能です。
+            </li>
+            <li>入力や固定の設定が完了したら、右の「決定」ボタンをクリックしてください。</li>
+            <li>初期状態で入力欄に何も入力せずに「この内容で生成」ボタンを押すと、ランダムな画像が生成・表示されます。</li>
+            <li>しばらく待つと、次世代の画像と新しい入力欄が出現します。この流れを何回か繰り返してみましょう。</li>
+        </ol>
+        <p>この画面は、右上の「使い方」ボタンでいつでも切り替えることができます。</p>
+        <img src="./assets/images/menu_manual.png" alt="ヘッダーメニュー">
+        <h3>おまけ機能</h3>
+        <ul>
+            <li>「テーマ」：ライトテーマとダークテーマを切り替えることができます。</li>
+        </ul>
+        <hr>
+<!-- ★ 修正: クリックできない問題を強制的に解消した確実なボタン -->
+        <div style="text-align: center; margin: 50px 0; padding-bottom: 50px; position: relative; z-index: 9999;">
+            <button onclick="document.getElementById('manualPopup').classList.add('hidden');" style="display: inline-block; padding: 20px 40px; font-size: 20px; font-weight: bold; background-color: #008cff; color: #fff; border: none; border-radius: 8px; cursor: pointer; pointer-events: auto;">
+                使い方を閉じて生成を始める
+            </button>
+        </div>
+
+        <p>最終更新：2024 Dec.8</p>
+
+        
+
+    </div>
+    <!-----------------------------
+    #MARK: 評価実験
+    ------------------------------>
+    <div id="estimation" hidden>
+	<form action="#" method="post" id="estimationForm" onsubmit="return false">
+		<input type="checkbox" id="form_exp" hidden checked>
+		<input type="checkbox" id="fullsize" hidden>
+		<label class="form-head" for="form_exp">
+			<h3>評価実験にご協力をお願いいたします</h3>
+			<span>△</span>
+		</label>
+		<p class="fullsize-wrapper form-inner">
+			<label for="fullsize"><u>分割表示の切替</u></label>
+		</p>
+		<ul class="form-inner">
+			<li>当アンケートで得た回答は当研究のみに使用します。</li>
+			<li>個人情報が含まれる内容は、論文や研究発表の際には匿名化いたします。</li>
+			<li>送信していただく内容は、以下のアンケートの回答の他に、入力された評価内容を含みます。</li>
+		</ul>
+		<dl>
+			<dt class="required">参加者ID</dt>
+			<dd><input type="text" data-key="participantId" name="participantId" id="student_num" value="" placeholder="例: 001"></dd>
+
+			<dt class="required">質問 1：あなたが入力した評価は、最終的にどれくらい反映されましたか？</dt>
+<dd class="radio -horizonal">
+	<input type="radio" data-key="reflect" name="reflect" value="5. 非常に反映された" id="reflect_5" hidden>
+	<label for="reflect_5">5. 非常に反映された</label>
+	<input type="radio" data-key="reflect" name="reflect" value="4. やや反映された" id="reflect_4" hidden>
+	<label for="reflect_4"></label>
+	<input type="radio" data-key="reflect" name="reflect" value="3. どちらとも言えない" id="reflect_3" hidden>
+	<label for="reflect_3"></label>
+	<input type="radio" data-key="reflect" name="reflect" value="2. あまり反映されなかった" id="reflect_2" hidden>
+	<label for="reflect_2"></label>
+	<input type="radio" data-key="reflect" name="reflect" value="1. 全く反映されなかった" id="reflect_1" hidden>
+	<label for="reflect_1">1. 全く反映されなかった</label>
+</dd>
+			<dt>質問 2：特に反映されたと思う評価文を教えてください。</dt>
+			<dd><textarea data-key="reflectedText" name="reflectedText" placeholder="例：「青くして」と入力したらきれいに青い背景になった、など"></textarea></dd>
+			<dt>質問 3：まったく反映されなかったと思う評価文を教えてください。</dt>
+			<dd><textarea data-key="notReflectedText" name="notReflectedText"></textarea></dd>
+			<dt class="required">質問 4：最終的な画像に満足していますか？</dt>
+<dd class="radio -horizonal">
+	<input type="radio" data-key="satisfaction" name="satisfaction" value="5. 非常に満足" id="satisfaction_5" hidden>
+	<label for="satisfaction_5">5. 非常に満足</label>
+	<input type="radio" data-key="satisfaction" name="satisfaction" value="4. やや満足" id="satisfaction_4" hidden>
+	<label for="satisfaction_4"></label>
+	<input type="radio" data-key="satisfaction" name="satisfaction" value="3. どちらとも言えない" id="satisfaction_3" hidden>
+	<label for="satisfaction_3"></label>
+	<input type="radio" data-key="satisfaction" name="satisfaction" value="2. あまり満足ではない" id="satisfaction_2" hidden>
+	<label for="satisfaction_2"></label>
+	<input type="radio" data-key="satisfaction" name="satisfaction" value="1. 全く満足ではない" id="satisfaction_1" hidden>
+	<label for="satisfaction_1">1. 全く満足ではない</label>
+</dd>
+			<dt class="required">質問 5：色や図形をはっきり指定した指示(例：「青にして」「丸を使って」)は反映されましたか？</dt>
+<dd class="radio -vertical">
+	<input type="radio" data-key="colorShape" name="colorShape" value="5. 非常に反映された" id="colorShape_6" hidden>
+	<label for="colorShape_6">5. 非常に反映された</label>
+	<input type="radio" data-key="colorShape" name="colorShape" value="4. やや反映された" id="colorShape_5" hidden>
+	<label for="colorShape_5">4. やや反映された</label>
+	<input type="radio" data-key="colorShape" name="colorShape" value="3. どちらとも言えない" id="colorShape_4" hidden>
+	<label for="colorShape_4">3. どちらとも言えない</label>
+	<input type="radio" data-key="colorShape" name="colorShape" value="2. あまり反映されなかった" id="colorShape_3" hidden>
+	<label for="colorShape_3">2. あまり反映されなかった</label>
+	<input type="radio" data-key="colorShape" name="colorShape" value="1. 全く反映されなかった" id="colorShape_2" hidden>
+	<label for="colorShape_2">1. 全く反映されなかった</label>
+	<input type="radio" data-key="colorShape" name="colorShape" value="そのような指示はしなかった" id="colorShape_1" hidden>
+	<label for="colorShape_1">そのような指示はしなかった</label>
+</dd>
+			<dt class="required">質問 6：このシステムの動作は快適でしたか？</dt>
+<dd class="radio -horizonal">
+	<input type="radio" data-key="comfort" name="comfort" value="5. 非常に快適" id="comfort_5" hidden>
+	<label for="comfort_5">5. 非常に快適</label>
+	<input type="radio" data-key="comfort" name="comfort" value="4. やや快適" id="comfort_4" hidden>
+	<label for="comfort_4"></label>
+	<input type="radio" data-key="comfort" name="comfort" value="3. どちらとも言えない" id="comfort_3" hidden>
+	<label for="comfort_3"></label>
+	<input type="radio" data-key="comfort" name="comfort" value="2. あまり快適ではない" id="comfort_2" hidden>
+	<label for="comfort_2"></label>
+	<input type="radio" data-key="comfort" name="comfort" value="1. 全く快適ではない" id="comfort_1" hidden>
+	<label for="comfort_1">1. 全く快適ではない</label>
+</dd>
+			<dt class="required">質問 7：このシステムは使いやすかったですか？</dt>
+<dd class="radio -horizonal">
+	<input type="radio" data-key="usability" name="usability" value="5. 非常に使いやすい" id="usability_5" hidden>
+	<label for="usability_5">5. 非常に使いやすい</label>
+	<input type="radio" data-key="usability" name="usability" value="4. やや使いやすい" id="usability_4" hidden>
+	<label for="usability_4"></label>
+	<input type="radio" data-key="usability" name="usability" value="3. どちらとも言えない" id="usability_3" hidden>
+	<label for="usability_3"></label>
+	<input type="radio" data-key="usability" name="usability" value="2. あまり使いやすくない" id="usability_2" hidden>
+	<label for="usability_2"></label>
+	<input type="radio" data-key="usability" name="usability" value="1. 全く使いやすくない" id="usability_1" hidden>
+	<label for="usability_1">1. 全く使いやすくない</label>
+</dd>
+			<dt>質問 8：使いやすかったところ、使いにくかったところを教えてください。</dt>
+			<dd><textarea data-key="usabilityText" name="usabilityText"></textarea></dd>
+			<dt>質問 9：このシステムに追加してほしい機能があれば教えてください。</dt>
+			<dd><textarea data-key="requestText" name="requestText"></textarea></dd>
+			<input type="hidden" data-key="systemLog" id="system_log" value="">
+			<dt id="validate-wrapper">
+				<button id="validate" type="button">送信する</button>
+			</dt>
+		</dl>
+	</form>
+</div>
+</body>
+<script src="./script/themes.js"></script>
+<script src="./script/kuromoji.js"></script>
+<script type="module" src="./script/main.js"></script>
+</html>

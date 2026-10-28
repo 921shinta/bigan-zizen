@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>事前アンケート</title>
+<style>
+:root{--bg:#f6f6f9;--card:#fff;--fg:#1f1f24;--muted:#66666e;--line:#d9d9e0;--accent:#5b44e0;--err:#c0392b}
+@media (prefers-color-scheme: dark){:root{--bg:#17171b;--card:#222228;--fg:#ececf0;--muted:#9c9ca6;--line:#3a3a42;--accent:#9b8cff;--err:#ff7b6b}}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.7 "Hiragino Sans","Yu Gothic",sans-serif;padding:24px max(16px,env(safe-area-inset-left,0px))}
+main{max-width:680px;margin:0 auto;display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px 20px}
+.head{border-top:8px solid var(--accent)}
+h1{font-size:26px;margin:0 0 10px}
+.head ul{margin:0;padding-left:1.2em;font-size:14px}
+.q{font-weight:bold;margin:0 0 6px}
+.q.required::after{content:" *";color:var(--err)}
+.hint{color:var(--muted);font-size:13px;margin:0 0 10px;white-space:pre-line}
+input[type=text],textarea{width:100%;box-sizing:border-box;font:inherit;color:var(--fg);background:transparent;border:0;border-bottom:1px solid var(--line);padding:6px 2px}
+textarea{min-height:64px;resize:vertical}
+input[type=text]:focus,textarea:focus{outline:none;border-bottom:2px solid var(--accent)}
+.opt{display:flex;gap:10px;align-items:flex-start;margin:6px 0;cursor:pointer}
+.opt input{margin-top:6px}
+.card.error{border-color:var(--err)}
+.card .msg{display:none;color:var(--err);font-size:13px;margin-top:6px}
+.card.error .msg{display:block}
+button{background:var(--accent);color:#fff;border:0;border-radius:6px;padding:12px 28px;font-size:16px;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.6;cursor:default}
+#status{color:var(--err);margin:6px 0 0}
+</style>
+</head>
+<body>
+<main>
+<form id="f" class="card head" style="padding:0;border:0;background:none;display:grid;gap:14px">
+  <div class="card head">
+    <h1>事前アンケート</h1>
+    <ul>
+      <li>当アンケートで得た回答は当研究のみに使用します。</li>
+      <li>個人情報が含まれる内容は、論文や研究発表の際には匿名化いたします。</li>
+      <li>送信していただく内容は、以下のアンケートの回答の他に、当システムが出力した画像および入力された評価内容を含みます。</li>
+    </ul>
+  </div>
+
+  <div class="card" data-q="participantId">
+    <p class="q required">参加者ID</p>
+    <input type="text" id="participantId" autocomplete="off">
+    <p class="msg">必須の質問です</p>
+  </div>
+
+  <div class="card" data-q="design">
+    <p class="q required">なにかにデザインを使うとき、そのデザインを作ることについて、どう考えていますか</p>
+    <div id="designOpts"></div>
+    <p class="msg">必須の質問です</p>
+  </div>
+
+  <div class="card" data-q="designReason">
+    <p class="q">上記の回答の理由があれば教えてください</p>
+    <p class="hint">例：1.2.自分だけが持ってるという特別感
+　　3.デザインが得意ではないから</p>
+    <input type="text" id="designReason" autocomplete="off">
+  </div>
+
+  <div class="card" data-q="usage">
+    <p class="q required">このようなシステムで作成した画像があれば、何に使いたいと考えますか</p>
+    <p class="hint">例：パソコンの背景、SNSのアイコン、発表スライドの背景デザイン、自身の創作におけるデザインのヒントにする</p>
+    <input type="text" id="usage" autocomplete="off">
+    <p class="msg">必須の質問です</p>
+  </div>
+
+  <div class="card" data-q="experience">
+    <p class="q required">画像生成AIや画像編集アプリを使った経験はありますか</p>
+    <div id="expOpts"></div>
+    <p class="msg">必須の質問です</p>
+  </div>
+
+  <div>
+    <button type="submit" id="submit">送信して次へ進む</button>
+    <p id="status"></p>
+  </div>
+</form>
+</main>
+
+<script>
+// ============================================================
+// ★ここだけ書き換える
+// ============================================================
+const CONFIG = {
+  formAction: 'https://docs.google.com/forms/d/e/1FAIpQLSe9jER8sKi2hYZOP0_OnHM8d_s02QmlPrMu8G9Iipwk5w8lwg/formResponse',
+  entry: {
+    participantId: 'entry.987472919',
+    design:        'entry.824960217',
+    designReason:  'entry.1620104482',
+    usage:         'entry.150011342',
+    experience:    'entry.25223761'
+  },
+  // 選択肢の文言は、Googleフォームの選択肢と一字一句同じにすること(句読点・番号も)
+  designOptions: [
+    '1.なんでも自作したい',
+    '2.既存のものを活用しつつ自作も入れてオリジナリティも出したい',
+    '3.既存のものをそのまま，または組み合わせて何とかしたい'
+  ],
+  experienceOptions: ['よく使う', '数回程度', 'ない'],
+  // 送信後に進む先(先輩のシステム)。{id} は参加者IDに置き換わる
+  nextUrl: 'https://bigan-zizen.vercel.app/senior/?id={id}'
+};
+// ============================================================
+
+const PID_KEY = 'bigan_participant_id';
+const PRE_KEY = 'bigan_pre_done';
+const $ = id => document.getElementById(id);
+const safeGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const safeSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+
+function radios(container, name, options) {
+  options.forEach((o, i) => {
+    const label = document.createElement('label'); label.className = 'opt';
+    const r = document.createElement('input'); r.type = 'radio'; r.name = name; r.value = o; r.id = `${name}_${i}`;
+    const s = document.createElement('span'); s.textContent = o;
+    label.append(r, s); container.appendChild(label);
+  });
+}
+radios($('designOpts'), 'design', CONFIG.designOptions);
+radios($('expOpts'), 'experience', CONFIG.experienceOptions);
+
+// 参加者ID: URLの ?id= を優先して入れる
+const urlId = new URLSearchParams(location.search).get('id');
+$('participantId').value = urlId || safeGet(PID_KEY) || '';
+
+function val(name) {
+  const r = document.querySelector(`input[name="${name}"]:checked`);
+  return r ? r.value : '';
+}
+
+$('f').addEventListener('submit', async e => {
+  e.preventDefault();
+  const data = {
+    participantId: $('participantId').value.trim(),
+    design: val('design'),
+    designReason: $('designReason').value.trim(),
+    usage: $('usage').value.trim(),
+    experience: val('experience')
+  };
+  let bad = false;
+  ['participantId', 'design', 'usage', 'experience'].forEach(k => {
+    const card = document.querySelector(`[data-q="${k}"]`);
+    const ng = !data[k];
+    card.classList.toggle('error', ng);
+    if (ng) bad = true;
+  });
+  if (bad) { $('status').textContent = '未回答の必須項目があります。'; document.querySelector('.error')?.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+  $('status').textContent = '';
+
+  if (CONFIG.nextUrl.includes('example.com')) {
+    $('status').textContent = '(設定未完了)nextUrl が仮のままです。pre.html の CONFIG を設定してください。';
+    return;
+  }
+  const fd = new FormData();
+  Object.keys(CONFIG.entry).forEach(k => { if (data[k] !== '') fd.set(CONFIG.entry[k], data[k]); });
+  $('submit').disabled = true; $('submit').textContent = '送信中...';
+  try {
+    await fetch(CONFIG.formAction, { method: 'POST', mode: 'no-cors', body: fd });
+  } catch (err) {
+    $('submit').disabled = false; $('submit').textContent = '送信して次へ進む';
+    $('status').textContent = '送信に失敗しました。通信状況を確認してもう一度押してください。';
+    return;
+  }
+  safeSet(PID_KEY, data.participantId);
+  safeSet(PRE_KEY, '1');
+  location.href = CONFIG.nextUrl.replace('{id}', encodeURIComponent(data.participantId));
+});
+</script>
+</body>
+</html>

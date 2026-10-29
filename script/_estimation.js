@@ -25,9 +25,9 @@ const CONFIG = {
 	},
 	// 送信完了後に自動で移動する先。{id} は参加者IDに置き換わる
 	//  先輩システム → 自分のシステムのURL / 自分のシステム → 最終アンケートのURL
-	nextUrl: 'https://example.com/final/?id={id}',
+	nextUrl: 'https://example.com/next/?id={id}',
 	// 事前アンケートが未回答のとき戻す先(不要なら空文字)。pre.html のURLなど
-	preUrl: ''
+	preUrl: 'https://bigan-zizen.vercel.app/pre.html'
 };
 // ============================================================
 
@@ -43,26 +43,31 @@ function getParticipantId() {
 	return safeGet(PID_KEY) || '';
 }
 
+// 事前アンケート未回答なら、システムの読み込みを待たずに事前アンケートへ移動する。
+// 回答済みかどうかは、ブラウザの記録か、URLの pre=1(事前アンケートが付ける)で判断する。
+(function redirectToPreSurvey() {
+	if (!CONFIG.preUrl) return;
+	const params = new URLSearchParams(location.search);
+	if (params.get('pre') === '1') { safeSet(PRE_KEY, '1'); return; }
+	if (safeGet(PRE_KEY) === '1') return;
+	const id = params.get('id') || safeGet(PID_KEY) || '';
+	location.replace(CONFIG.preUrl + (CONFIG.preUrl.includes('?') ? '&' : '?') + 'id=' + encodeURIComponent(id));
+})();
+
 const elemValidateBtn = document.getElementById('validate');
 // システムの読み込み(AIモデルなど)が終わる前に送信ボタンが押されても反応するよう、
 // モジュール読み込み時点でクリックを受け付ける
 if (elemValidateBtn) elemValidateBtn.addEventListener('click', validate);
 
 export function enableEstimation() {
-	// 事前アンケート未回答なら先にそちらへ
-	if (CONFIG.preUrl && safeGet(PRE_KEY) !== '1') {
-		const id = getParticipantId();
-		location.replace(CONFIG.preUrl + (CONFIG.preUrl.includes('?') ? '&' : '?') + 'id=' + encodeURIComponent(id));
-		return;
-	}
-
 	if (CONFIG.role !== 'mine') {
 		const label = document.createElement('label');
 		label.setAttribute('for', 'form_exp');
 		label.innerText = '評価実験';
 		document.getElementsByClassName('header-control')[0].appendChild(label);
 	}
-	document.getElementById('estimation').removeAttribute('hidden');
+	// 自分のシステムは、ヘッダーの「評価実験」ボタンで表示する
+	if (CONFIG.role !== 'mine') document.getElementById('estimation').removeAttribute('hidden');
 
 	const elemId = document.getElementById('student_num');
 	if (elemId) elemId.value = getParticipantId();
@@ -137,6 +142,9 @@ async function send() {
 		alert('送信先(CONFIG)が未設定です。_estimation.js の CONFIG を設定してください。');
 		return;
 	}
+	// 最後に表示されていた2枚(評価していない最終世代)も履歴に入れる
+	try { if (window.recordFinalShown) window.recordFinalShown(); } catch (e) { console.warn(e); }
+
 	const logEl = document.getElementById('system_log');
 	const log = (logEl && logEl.value) ? logEl.value : buildLog(pid);
 	fd.set(CONFIG.entry.systemLog, log);

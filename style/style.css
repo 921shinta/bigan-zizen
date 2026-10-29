@@ -1,0 +1,715 @@
+/* ========================
+
+フォントについて
+Google Fontsを使用。
+	英数字：Alexandria
+	日本語：Murecho
+	その他：Noto Sans JP
+ウエイトは、300, 500, 700のいずれかとする。
+実装上は、lighter, normal, bolderでも問題ない。
+
+======================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@250;500;650&family=Murecho:wght@300;500;700&family=Noto+Sans+JP:wght@320;500;850&display=swap');
+
+/* ========================
+
+#MARK: 全体
+
+======================== */
+
+:root {
+	font-family: 'Alexandria', 'Murecho', 'Noto Sans JP', sans-serif;
+	--sample: hsl(0, 8%, 5%);
+}
+
+html {
+	font-size: 1px;
+
+	/* @media (max-width: 767px) {
+		font-size: 0.13vw;
+	} */
+
+	@media (max-width: 400px) {
+		font-size: 0.25vw;
+	}
+}
+
+body {
+	--color-fg: #181b1a;
+	--color-bg: linear-gradient(180deg, #eee, #fff6cc 40%, #001133 60%, #111) top / 100% 300%;
+	--color-manual-bg: #fff6ccee;
+	--color-blue-400: hsl(220, 80%, 40%);
+	--color-blue-600: hsl(220, 90%, 60%);
+	--color-blue-800: hsl(220, 100%, 80%);
+	--color-blue-900: hsl(220, 100%, 90%);
+
+	font-size: 16rem;
+	font-weight: 300;
+	color: var(--color-fg);
+	background: var(--color-bg);
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	height: 100vh;
+	
+	&:where(.dark-theme) {
+		background-position: 0 100%;
+		--color-fg: #e5fff6;
+		--color-manual-bg: #001133ee;
+	}
+}
+
+/* ========================
+
+#MARK: 一般
+
+======================== */
+
+h2, h3, h4 {
+	font-weight: 500;
+}
+
+button, label{
+	font-weight: 500;
+	line-height: 1.5;
+	min-width: 32rem;
+	padding: 4rem;
+}
+
+.print-only {
+	display: none;
+}
+
+.msg-loading {
+	animation-name: msg-loading;
+	animation-duration: 0.5s;
+	animation-timing-function: ease-in-out;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+	transform-origin: bottom;
+	/* transform-origin: bottom right; */
+}
+
+@keyframes msg-loading {
+	50% {
+		opacity: 1;
+		scale: 1 1;
+	}
+	100% {
+		opacity: 0.5;
+		scale: 1 0.85;
+	}
+}
+
+.msg-evaluate {
+	display: inline-block;
+	height: 24rem;
+}
+
+em {
+	font-style: normal;
+	font-weight: 700;
+	color: #b71414;
+	animation-name: em;
+	animation-duration: 1s;
+	animation-timing-function: ease-in-out;
+	animation-iteration-count: infinite;
+	animation-direction: normal;
+}
+
+@keyframes em {
+	50%, 99% {
+		filter: brightness(3);
+	}
+	100%, 49% {
+		filter: brightness(1);
+	}
+}
+
+textarea:focus{
+	/* background: #0802;
+	border-bottom-width: 4rem; */
+
+	&::placeholder {
+		font-style: italic;
+	}
+}
+
+/* ========================
+
+#MARK: 各パーツ
+
+======================== */
+
+
+header {
+	background: var(--color-blue-400);
+	width: 100%;
+	max-width: 1280px;
+	display: flex;
+	align-items: center;
+	margin-inline: auto;
+	padding: 4rem;
+	border-bottom-left-radius: 8rem;
+	filter: drop-shadow(0 0 8rem #8883);
+
+	.header-icon {
+		margin-right: 8rem;
+		filter: drop-shadow(0.8rem 0rem 0rem #fff);
+		img {
+			width: 64rem;
+			height: 32rem;
+			object-fit: cover;
+		}
+	}
+
+
+	.header-logotype img {
+		object-fit: contain;
+		width: 128rem;
+		height: 32rem;
+	}
+
+	.header-control {
+		font-size: 12rem;
+		flex-shrink: 0;
+		display: flex;
+		gap: 4rem;
+		margin-left: auto;
+
+		button, label {
+			color: #333;
+			background: var(--color-blue-900);
+			border: none;
+			border-radius: 4rem;
+
+			&:hover {
+				background: var(--color-blue-800);
+			}
+
+			&:disabled {
+				background: #ccc9;
+				pointer-events: none;
+			}
+		}
+	}
+
+	@media (min-width: 1280px) {
+		border-bottom-right-radius: 8rem;
+	}
+}
+
+main {
+	flex-grow: 1;
+	overflow-y: scroll;
+	scroll-behavior: smooth;
+}
+
+section {
+	max-width: 960px;
+	margin-inline: auto;
+	padding-block: 12rem;
+}
+
+section.genCycle {
+	.titleBar {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+
+		h3 {
+			flex-grow: 1;
+			padding-left: 4rem;
+		}
+
+		span {
+			padding-inline: 8rem;
+		}
+
+		button {
+			color: white;
+			background: var(--color-blue-400);
+			border: none;
+			border-radius: 4rem;
+			border-bottom-right-radius: 8rem;
+			padding-inline: 8rem;
+			/* padding-right: 16rem; */
+			/* clip-path: polygon(0% 0%, 0% 100%, calc(100% - 16rem) 100%, 100% 50%, calc(100% - 16rem) 0%); */
+
+			&:hover {
+				background: var(--color-blue-600);
+			}
+
+			&:disabled {
+				pointer-events: none;
+				opacity: 0.7;
+			}
+		}
+	}
+
+	.compareImages {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4rem;
+		justify-content: space-evenly;
+		margin: 8rem auto;
+		padding-inline: 4rem;
+
+		canvas {
+			width: calc(10% - 4rem);
+			max-width: 400rem;
+			flex-grow: 1;
+			border-radius: 8rem;
+			filter: drop-shadow(0 0 8rem #8883);
+		}
+
+		@media (max-width: 480px) {
+			canvas {
+				width: calc(20% - 4rem);
+			}
+		}
+	}
+
+	.userEvaluate {
+		padding-inline: 4rem;
+		.userEvaluate-inner {
+			textarea {
+				width: 100%;
+				height: 112rem;
+				outline: none;
+				border-radius: 8rem;
+				border-top-left-radius: 0;
+				resize: none;
+
+				&:disabled {
+					opacity: 0.5;
+				}
+			}
+
+			p {
+				padding: 4rem;
+			}
+		}
+	}
+}
+
+/* =====================
+#MARK: 使い方
+===================== */
+.manualPopup {
+	background: var(--color-manual-bg);
+	position: absolute;
+	z-index: 10;
+	top: 40rem;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	padding-block: 8rem;
+	padding-inline: max(4rem, 50% - 400rem);
+	overflow-y: scroll;
+	transition: background 0.5s;
+
+	&.hidden {
+		display: none;
+	}
+
+	h2 {
+		border-bottom: dotted 2rem var(--color-blue-600);
+	}
+
+	h3 {
+		margin-top: 8rem;
+	}
+
+	li::marker {
+		font-weight: 500;
+		color: var(--color-blue-600);
+	}
+}
+
+/* =====================
+#MARK: 評価実験
+===================== */
+
+#estimation {
+	width: 100vw;
+	height: 32rem;
+	flex-shrink: 0;
+	position: relative;
+	overflow: hidden;
+	transition: height 0.3s;
+
+	form {
+		padding-bottom: 48rem;
+	}
+
+	.form-head {
+		line-height: 24rem;
+		color: #fff;
+		background: var(--color-blue-400);
+		display: flex;
+		align-items: center;
+		position: sticky;
+		top: 0;
+		z-index: 1;
+		margin: auto;
+		border-top: solid 2rem white;
+		padding: 4rem max(4rem, 50% - 480px);
+		h3 {
+			flex-grow: 1;
+			padding-left: 4rem;
+		}
+	}
+
+	&:where(:has(#form_exp:checked)) {
+		height: 50vh;
+		overflow-y: auto;
+
+		label[for="form_exp"] span {
+			scale: 1 -1;
+		}
+	}
+	
+	&:where(:has(#form_exp:checked):has(#fullsize:checked)) {
+		height: calc(100vh - 40rem);
+	}
+
+	.form-inner {
+		list-style: disc;
+		padding: 4rem max(4rem, 50% - 480px) 8rem;
+
+		li {
+			margin-left: 24rem;
+			&::marker {
+				color: var(--color-blue-600);
+			}
+		}
+	}
+
+	.fullsize-wrapper {
+		text-align: end;
+		label:hover {
+			opacity: 0.7;
+		}
+	}
+
+	dl {
+		line-height: 24rem;
+		/* display: grid;
+		grid-template-columns: max-content 1fr;
+		gap: 8rem 12rem; */
+		display: flex;
+		flex-direction: column;
+		padding: 4rem max(4rem, 50% - 480px);
+
+		dt {
+			/* text-align: end; */
+			font-size: 1.15em;
+			font-weight: 500;
+			position: relative;
+			margin-block: 16rem 4rem;
+			padding-left: 24rem;
+
+			&::before {
+				content: "";
+				display: inline-block;
+				position: absolute;
+				width: 18rem;
+				/* height: 22rem; */
+				top: 0;
+				left: 0;
+				border-top: solid 13.2rem var(--color-blue-600);
+				border-bottom: solid 8.8rem var(--color-blue-400);
+				clip-path: polygon(0% 10%, 28% 60%, 0% 90%, 72% 90%, 100% 60%, 72% 10%, 54% 10%, 82% 60%, 54% 90%, 36% 90%, 64% 60%, 36% 10%);
+			}
+
+			&.required {
+				&::after {
+					content: "必須";
+					font-size: 16rem;
+					color: white;
+					background: #b71414;
+					display: inline-block;
+					margin-left: 8rem;
+					border-radius: 4rem;
+					padding-inline: 12rem;
+
+				}
+			}
+		}
+
+		dd {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 4rem 8rem;
+			margin-left: 32rem;
+			margin-block: 8rem 16rem;
+
+			p {
+				width: 100%;
+			}
+
+			&.error {
+				background: #b7141433;
+			}
+		}
+
+		input, textarea {
+			margin: 0;
+			border: none;
+			border-bottom: dotted 2rem;
+			padding-bottom: 4rem;
+
+			&:focus-within {
+				outline: none;
+				border-bottom: solid 0rem transparent;
+				background: linear-gradient(to right, #437ef4, #0c4ac5) bottom / 100% 2rem no-repeat;
+				padding-bottom: 6rem;
+			}
+		}
+
+		input {
+			width: 144rem;
+			height: 24rem;
+			&.w2x {
+				width: 288rem;
+			}
+
+			/* &[type="radio"] {
+				width: 16rem;
+				margin-inline: 4rem;
+				clip-path: polygon(40% 40%, 40% 60%, 60% 60%, 60% 40%);
+				scale: 4;
+
+				&:nth-of-type(1) {
+					filter: hue-rotate(-210deg);
+				}
+				&:nth-of-type(2) {
+					filter: hue-rotate(-157deg) brightness(2);
+				}
+				&:nth-of-type(3) {
+					filter: hue-rotate(-105deg) brightness(1.5);
+				}
+				&:nth-of-type(4) {
+					filter: hue-rotate(-52deg);
+				}
+			} */
+		}
+
+		textarea {
+			width: 100%;
+			min-height: 3em;
+			resize: vertical;
+			border-left: dotted 2rem;
+			border-bottom-left-radius: 8rem;
+			transition: border-radius 0.3s;
+
+			&:focus-within {
+				border-bottom-left-radius: 0rem;
+			}
+		}
+
+		.radio {
+			label {
+				font-weight: 300;
+				--bg: transparent;
+
+				&:hover {
+					cursor: pointer;
+					text-decoration: underline;
+				}
+			}
+
+			input:checked + label {
+				&:nth-of-type(1) {
+					--bg: hsl(0, 100%, 70%);
+				}
+
+				&:nth-of-type(2) {
+					--bg: hsl(30, 100%, 55%);
+				}
+
+				&:nth-of-type(n + 3) {
+					--bg: hsl(60, 100%, 45%);
+				}
+
+				&:nth-last-of-type(2) {
+					--bg: hsl(160, 100%, 35%);
+				}
+
+				&:nth-last-of-type(1) {
+					--bg: hsl(220, 100%, 40%);
+				}
+
+				&::before,
+				&::after {
+					background: radial-gradient(circle, white 3rem, #333 3rem 4.5rem, var(--bg) 4.5rem);
+				}
+			}
+		}
+
+		.radio.-vertical {
+			display: flex;
+			flex-direction: column;
+			gap: 0;
+
+			label {
+				display: flex;
+				gap: 4rem;
+				min-height: 16rem;
+				align-items: stretch;
+
+				&::before {
+					content: "";
+					display: inline-block;
+					flex-shrink: 0;
+					width: 16rem;
+					border: solid 1rem;
+				}
+
+				&:first-of-type::before {
+					border-radius: 24rem 24rem 0 0;
+				}
+
+				&:last-of-type::before {
+					border-radius: 0 0 24rem 24rem;
+				}
+			}
+		}
+
+		.radio.-horizonal {
+			gap: 0;
+			flex-wrap: nowrap;
+
+			label {
+				display: flex;
+				padding: 0;
+				gap: 8rem;
+
+				&:first-of-type::after,
+				&:not(:first-of-type)::before {
+					content: "";
+					display: inline-block;
+					width: 36rem;
+					height: 16rem;
+					margin-block: auto;
+					border: solid 1rem;
+				}
+
+				&:first-of-type::after {
+					border-radius: 16rem 0 0 16rem;
+				}
+
+				&:last-of-type::before {
+					border-radius: 0 16rem 16rem 0;
+				}
+			}
+		}
+
+		label {
+			line-height: 24rem;
+			padding: 0rem 6rem;
+		}
+
+		#validate, .cta {
+			font-size: 20rem;
+			font-weight: 500;
+			text-decoration: none;
+			color: white;
+			background: linear-gradient(120deg, var(--color-blue-600), var(--color-blue-400));
+			border: none;
+			border-radius: 8rem;
+			padding-inline: 24rem;
+
+			&:hover {
+				background: var(--color-blue-400);
+			}
+		}
+
+		#validate.error::after {
+			content: "※必須項目が残っているようです";
+			color: var(--color-fg);
+			font-size: 16rem;
+			font-weight: 300;
+			margin-left: 32rem;
+			position: absolute;
+			top: 10rem;
+			width: max-content;
+		}
+
+		.afterValidate {
+			display: none;
+		}
+	}
+}
+
+section.formCheck {
+	padding-inline: 4rem;
+	h2 {
+		font-size: 20rem;
+		margin-block: 12rem 8rem;
+	}
+
+	dt {
+		font-weight: 500;
+		margin-top: 8rem;
+	}
+
+	dd {
+		white-space: pre-wrap;
+		padding-left: 12rem;
+		padding-bottom: 8rem;
+		border-bottom: dotted 2rem var(--color-blue-600);
+	}
+
+	.buttons {
+		display: flex;
+		gap: 40rem;
+		justify-content: center;
+		margin-top: 20rem;
+
+		button {
+			font-size: 20rem;
+			font-weight: 500;
+			text-decoration: none;
+			border-radius: 8rem;
+			padding-inline: 24rem;
+			
+			&.back:hover {
+				opacity: 0.7;
+			}
+			
+			&.submit {
+				color: white;
+				background: linear-gradient(120deg, var(--color-blue-600), var(--color-blue-400));
+				border: none;
+
+				&:hover {
+					background: var(--color-blue-400);
+
+				}
+			}
+		}
+	}
+}
+
+/* @media print {
+	.print-only {
+		display: contents;
+	}
+	.print-hidden {
+		display: none;
+		visibility: hidden;
+	}
+
+	body {
+		display: block;
+		--color-fg: #333;
+		--color-bg: white;
+	}
+
+	#estimation {
+		height: unset;
+	}
+} */

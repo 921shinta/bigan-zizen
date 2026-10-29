@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<title>BIGAN | 話してつくる、まだ見ぬ模様</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="rksgm">
+	<meta name="description" content="2024年度卒業研究「二個体比較と自然言語での評価を用いたIGAによる背景画像生成システム」にて作成したシステムです。">
+	<link rel="shortcut icon" href="./assets/images/favicon.png" type="image/x-icon">
+	<meta name="robots" content="noindex,nofollow">
+	<meta name="format-detection" content="email=no,telephone=no,address=no">
+
+	<meta prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://ogumay.hiyoko.biz/bigan/">
+	<meta property="og:title" content="BIGAN | 話してつくる、まだ見ぬ模様">
+	<meta property="og:description" content="2024年度卒業研究「二個体比較と自然言語での評価を用いたIGAによる背景画像生成システム」にて作成したシステムです。">
+	<meta property="og:site_name" content="BIGAN">
+	<meta property="og:image" content="https://ogumay.hiyoko.biz/bigan/assets/images/bigan_large.png">
+
+	<link rel="stylesheet" href="./style/ress_min.css">
+	<link rel="stylesheet" href="./style/style.css">
+</head>
+<body>
+	<header>
+		<div class="header-icon"><img src="assets/images/bigan.png" alt="ロゴ"></div>
+		<div class="header-logotype"><img src="assets/images/bigan_logotype.svg" alt="ロゴタイプ"></div>
+		<div class="header-control">
+			<!-- <button onclick="location.href = './'">最初から</button> -->
+			<button id="toggleTheme">テーマ</button>
+			<button id="toggleManual">使い方</button>
+		</div>
+	</header>
+	<main id="main">
+		<p id="msg-ReadFiles" class="msg-loading">必要なファイルを読み込んでいます...</p>
+		<!-- _appendGenCycle.jsで自動生成 -->
+	</main>
+	<div class="manualPopup" id="manualPopup">
+		<!-- 
+		#MARK: 使い方
+		-->
+		<h2>使い方</h2>
+		<ol>
+			<li>2枚の画像が出現します。</li>
+			<img src="./assets/images/convasation_initial.png" alt="メイン画面">
+			<li>
+				出現した画像の下にテキストエリアがありますので、次世代に求めるものを入力してください。<br>
+			</li>
+			<h3>入力について</h3>
+			<ul>
+				<li>文章は読点や改行、()で区切られます。</li>
+				<li>1文に趣旨は1つまでにすると、混乱を招きにくくなります。そのため、「だけど」「しかし」などは避け、別の文にすることを推奨します。</li>
+				<li>平易な語彙を使うと、文章を汲み取ってもらえやすくなります。</li>
+			</ul>
+			<h3>入力例</h3>
+			<ul>
+				<li>出力に言及。例：「右が好き」「左は嫌い」など。</li>
+				<li>好き嫌い。例：「クールで好き」「ちかちかするのは嫌」など。</li>
+				<li>欲しいポイント。例：「もっとさわやかな感じが良い」など。</li>
+			</ul>
+			<li>入力が完了したら、右の「決定」ボタンをクリックしてください。</li>
+			<li>しばらく待つと、次世代の画像と新しい入力欄が出現します。</li>
+			<li>この流れを何回か繰り返してみましょう。</li>
+			<li>
+				なにかが閃いたら、書き留めてみましょう。<br>
+				図形をﾈｺﾁｬﾝに置き換えたり、配置を調整してみたり、...あなた次第でいくらでも化けます。
+			</li>
+		</ol>
+		<p>この画面は、右上の「使い方」ボタンでいつでも切り替えることができます。</p>
+		<img src="./assets/images/menu_manual.png" alt="ヘッダーメニュー">
+		<h3>おまけ機能</h3>
+		<ul>
+			<li>「テーマ」：ライトテーマとダークテーマを切り替えることができます。</li>
+		</ul>
+		<h2>BIGAN とは?</h2>
+		<p>卒業研究『二個体比較と自然言語での評価を用いたIGAによる背景画像生成システム』にて作成したシステムそのものを指します。</p>
+		<h3>ロゴマーク</h3>
+		<p>当システムで生成する模様の構成要素である図形を散りばめて文字のようにしてみました。</p>
+		<img src="./assets/images/bigan_large.png" alt="BIGAN" width="512">
+		<img src="./assets/images/bigan_logotype.svg" alt="Background maker by Interactive Genetic Algorithm with Natural language processing" width="432">
+		<h3>名前</h3>
+		<p>
+			当システムの略称として使用していたもので、命名時の名称「自然言語処理を取り入れた対話型遺伝的アルゴリズムによる背景メーカー」の頭文字をとってこの名前となりました。「審美眼」の「美眼」とも掛けています。
+			<!-- なかなかいい響きじゃないですか？ -->
+			<!-- このプログラム、画像生成や自然言語処理、遺伝的アルゴリズムにUXと色々てんこもりにしてしまったおかげでまだまだガタが多いんですよね。今後誰かに改良してもらって「新・BIGAN」を作ってもらいたいところ。 -->
+		</p>
+		<hr>
+		<p>最終更新：2024 Dec.8</p>
+	</div>
+	<!-----------------------------
+	#MARK: 評価実験
+	------------------------------>
+	<div id="estimation" hidden>
+	<form action="#" method="post" id="estimationForm" onsubmit="return false">
+		<input type="checkbox" id="form_exp" hidden checked>
+		<input type="checkbox" id="fullsize" hidden>
+		<label class="form-head" for="form_exp">
+			<h3>評価実験にご協力をお願いいたします</h3>
+			<span>△</span>
+		</label>
+		<p class="fullsize-wrapper form-inner">
+			<label for="fullsize"><u>分割表示の切替</u></label>
+		</p>
+		<ul class="form-inner">
+			<li>当アンケートで得た回答は当研究のみに使用します。</li>
+			<li>個人情報が含まれる内容は、論文や研究発表の際には匿名化いたします。</li>
+			<li>送信していただく内容は、以下のアンケートの回答の他に、入力された評価内容を含みます。</li>
+		</ul>
+		<dl>
+			<dt class="required">参加者ID</dt>
+			<dd><input type="text" data-key="participantId" name="participantId" id="student_num" value="" placeholder="例: 001"></dd>
+
+			<dt class="required">質問 1：あなたが入力した評価は、最終的にどれくらい反映されましたか？</dt>
+<dd class="radio -horizonal">
+	<input type="radio" data-key="reflect" name="reflect" value="5. 非常に反映された" id="reflect_5" hidden>
+	<label for="reflect_5">5. 非常に反映された</label>
+	<input type="radio" data-key="reflect" name="reflect" value="4. やや反映された" id="reflect_4" hidden>
+	<label for="reflect_4"></label>
+	<input type="radio" data-key="reflect" name="reflect" value="3. どちらとも言えない" id="reflect_3" hidden>
+	<label for="reflect_3"></label>
+	<input type="radio" data-key="reflect" name="reflect" value="2. あまり反映されなかった" id="reflect_2" hidden>
+	<label for="reflect_2"></label>
+	<input type="radio" data-key="reflect" name="reflect" value="1. 全く反映されなかった" id="reflect_1" hidden>
+	<label for="reflect_1">1. 全く反映されなかった</label>
+</dd>
+			<dt>質問 2：特に反映されたと思う評価文を教えてください。</dt>
+			<dd><textarea data-key="reflectedText" name="reflectedText" placeholder="例：「青くして」と入力したらきれいに青い背景になった、など"></textarea></dd>
+			<dt>質問 3：まったく反映されなかったと思う評価文を教えてください。</dt>
+			<dd><textarea data-key="notReflectedText" name="notReflectedText"></textarea></dd>
+			<dt class="required">質問 4：最終的な画像に満足していますか？</dt>
+<dd class="radio -horizonal">
+	<input type="radio" data-key="satisfaction" name="satisfaction" value="5. 非常に満足" id="satisfaction_5" hidden>
+	<label for="satisfaction_5">5. 非常に満足</label>
+	<input type="radio" data-key="satisfaction" name="satisfaction" value="4. やや満足" id="satisfaction_4" hidden>
+	<label for="satisfaction_4"></label>
+	<input type="radio" data-key="satisfaction" name="satisfaction" value="3. どちらとも言えない" id="satisfaction_3" hidden>
+	<label for="satisfaction_3"></label>
+	<input type="radio" data-key="satisfaction" name="satisfaction" value="2. あまり満足ではない" id="satisfaction_2" hidden>
+	<label for="satisfaction_2"></label>
+	<input type="radio" data-key="satisfaction" name="satisfaction" value="1. 全く満足ではない" id="satisfaction_1" hidden>
+	<label for="satisfaction_1">1. 全く満足ではない</label>
+</dd>
+			<dt class="required">質問 5：色や図形をはっきり指定した指示(例：「青にして」「丸を使って」)は反映されましたか？</dt>
+<dd class="radio -vertical">
+	<input type="radio" data-key="colorShape" name="colorShape" value="5. 非常に反映された" id="colorShape_6" hidden>
+	<label for="colorShape_6">5. 非常に反映された</label>
+	<input type="radio" data-key="colorShape" name="colorShape" value="4. やや反映された" id="colorShape_5" hidden>
+	<label for="colorShape_5">4. やや反映された</label>
+	<input type="radio" data-key="colorShape" name="colorShape" value="3. どちらとも言えない" id="colorShape_4" hidden>
+	<label for="colorShape_4">3. どちらとも言えない</label>
+	<input type="radio" data-key="colorShape" name="colorShape" value="2. あまり反映されなかった" id="colorShape_3" hidden>
+	<label for="colorShape_3">2. あまり反映されなかった</label>
+	<input type="radio" data-key="colorShape" name="colorShape" value="1. 全く反映されなかった" id="colorShape_2" hidden>
+	<label for="colorShape_2">1. 全く反映されなかった</label>
+	<input type="radio" data-key="colorShape" name="colorShape" value="そのような指示はしなかった" id="colorShape_1" hidden>
+	<label for="colorShape_1">そのような指示はしなかった</label>
+</dd>
+			<dt class="required">質問 6：このシステムの動作は快適でしたか？</dt>
+<dd class="radio -horizonal">
+	<input type="radio" data-key="comfort" name="comfort" value="5. 非常に快適" id="comfort_5" hidden>
+	<label for="comfort_5">5. 非常に快適</label>
+	<input type="radio" data-key="comfort" name="comfort" value="4. やや快適" id="comfort_4" hidden>
+	<label for="comfort_4"></label>
+	<input type="radio" data-key="comfort" name="comfort" value="3. どちらとも言えない" id="comfort_3" hidden>
+	<label for="comfort_3"></label>
+	<input type="radio" data-key="comfort" name="comfort" value="2. あまり快適ではない" id="comfort_2" hidden>
+	<label for="comfort_2"></label>
+	<input type="radio" data-key="comfort" name="comfort" value="1. 全く快適ではない" id="comfort_1" hidden>
+	<label for="comfort_1">1. 全く快適ではない</label>
+</dd>
+			<dt class="required">質問 7：このシステムは使いやすかったですか？</dt>
+<dd class="radio -horizonal">
+	<input type="radio" data-key="usability" name="usability" value="5. 非常に使いやすい" id="usability_5" hidden>
+	<label for="usability_5">5. 非常に使いやすい</label>
+	<input type="radio" data-key="usability" name="usability" value="4. やや使いやすい" id="usability_4" hidden>
+	<label for="usability_4"></label>
+	<input type="radio" data-key="usability" name="usability" value="3. どちらとも言えない" id="usability_3" hidden>
+	<label for="usability_3"></label>
+	<input type="radio" data-key="usability" name="usability" value="2. あまり使いやすくない" id="usability_2" hidden>
+	<label for="usability_2"></label>
+	<input type="radio" data-key="usability" name="usability" value="1. 全く使いやすくない" id="usability_1" hidden>
+	<label for="usability_1">1. 全く使いやすくない</label>
+</dd>
+			<dt>質問 8：使いやすかったところ、使いにくかったところを教えてください。</dt>
+			<dd><textarea data-key="usabilityText" name="usabilityText"></textarea></dd>
+			<dt>質問 9：このシステムに追加してほしい機能があれば教えてください。</dt>
+			<dd><textarea data-key="requestText" name="requestText"></textarea></dd>
+			<input type="hidden" data-key="systemLog" id="system_log" value="">
+			<dt id="validate-wrapper">
+				<button id="validate" type="button">送信する</button>
+			</dt>
+		</dl>
+	</form>
+</div>
+</body>
+<script src="./script/themes.js"></script>
+<script src="./script/kuromoji.js"></script>
+<script type="module" src="./script/main.js"></script>
+</html>

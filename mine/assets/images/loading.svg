@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 8 128 16" fill="white" stroke="black" stroke-width="0.4">
+	<style>
+		.dot {
+			transform-origin: center 16px;
+			animation: rotate 5s forwards infinite ease-in-out;
+		}
+
+		.dot1 {
+			animation-delay: 0s;
+		}
+
+		.dot2 {
+			animation-delay: 2s;
+		}
+
+		.dot3 {
+			animation-delay: 0.5s;
+		}
+
+		.dot4 {
+			animation-delay: 4s;
+		}
+
+		.dot5 {
+			animation-delay: 1.5s;
+		}
+
+		.dot6 {
+			animation-delay: 3.5s;
+		}
+
+		@keyframes rotate {
+			0% {
+				scale: 1 1;
+			}
+			10%, 100% {
+				scale: 1 -1;
+			}
+		}
+	</style>
+	<path d="M4 16m-2 0a1 1 0 004 0 1 1 0 00-4 0" class="dot dot1">
+	</path>
+	<path d="M12 16m-2 0a1 1 0 004 0 1 1 0 00-4 0" class="dot dot2" />
+	<path d="M20 16m-2 0a1 1 0 004 0 1 1 0 00-4 0" class="dot dot3" />
+	<path d="M108 16m-2 0a1 1 0 004 0 1 1 0 00-4 0" class="dot dot4" />
+	<path d="M116 16m-2 0a1 1 0 004 0 1 1 0 00-4 0" class="dot dot5" />
+	<path d="M124 16m-2 0a1 1 0 004 0 1 1 0 00-4 0" class="dot dot6" />
+	<style>
+		.text {
+			font-family: 'Alexandria', 'Murecho', 'Noto Sans JP', sans-serif;
+			font-size: 12px;
+			font-weight: 700;
+		}
+	</style>
+	<text class="text" x="24" y="20" textLength="80" lengthAdjust="spacingAndGlyphs" stroke-width="0.8">
+		お待ちください
+	</text>
+	<text class="text" x="24" y="20" textLength="80" lengthAdjust="spacingAndGlyphs" stroke="transparent">
+		お待ちください
+	</text>
+	<!-- <path d="M0 4 0 28A4 4 0 004 32L28 32A4 4 0 0032 28L32 4A4 4 0 0028 0L4 0A4 4 0 000 4" fill="white" /> -->
+	<!-- <path d="M7 1C6 5 3 11 1 13L3 18C7 13 10 7 11 2ZM5 11 5 31 9 31 9 5ZM13 2C13 14 12 20 10 31L14 31C16 19 17 11 17 5L30 5 29 2ZM16 11C18 19 21 25 25 31L30 31C23 22 22 16 20 11ZM16 11 25 11C26 17 22 23 15 31L20 31C24 27 31 17 29 8L16 8Z" fill="#10896d" /> -->
+</svg>

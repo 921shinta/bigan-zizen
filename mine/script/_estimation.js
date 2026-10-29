@@ -25,7 +25,7 @@ const CONFIG = {
 	},
 	// 送信完了後に自動で移動する先。{id} は参加者IDに置き換わる
 	//  先輩システム → 自分のシステムのURL / 自分のシステム → 最終アンケートのURL
-	nextUrl: 'https://example.com/next/?id={id}',
+	nextUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSd2PC3DeulKyuOf5s2cMc5TSYr5AQkk6FLHxryEu-rJluX96g/viewform?usp=pp_url&entry.1743558711={id}',
 	// 事前アンケートが未回答のとき戻す先(不要なら空文字)。pre.html のURLなど
 	preUrl: ''
 };

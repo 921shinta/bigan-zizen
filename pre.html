@@ -102,7 +102,7 @@ const CONFIG = {
   ],
   experienceOptions: ['よく使う', '数回程度', 'ない'],
   // 送信後に進む先(先輩のシステム)。{id} は参加者IDに置き換わる
-  nextUrl: 'https://bigan-zizen.vercel.app/senior/?id={id}'
+  nextUrl: 'https://bigan-zizen.vercel.app/?id={id}&pre=1'
 };
 // ============================================================
 
@@ -166,7 +166,7 @@ $('f').addEventListener('submit', async e => {
     return;
   }
   safeSet(PID_KEY, data.participantId);
-  safeSet(PRE_KEY, '1');
+  safeSet(PRE_KEY, data.participantId);
   location.href = CONFIG.nextUrl.replace('{id}', encodeURIComponent(data.participantId));
 });
 </script>

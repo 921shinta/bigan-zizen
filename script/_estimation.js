@@ -48,9 +48,11 @@ function getParticipantId() {
 (function redirectToPreSurvey() {
 	if (!CONFIG.preUrl) return;
 	const params = new URLSearchParams(location.search);
-	if (params.get('pre') === '1') { safeSet(PRE_KEY, '1'); return; }
-	if (safeGet(PRE_KEY) === '1') return;
-	const id = params.get('id') || safeGet(PID_KEY) || '';
+	const id = params.get('id') || '';
+	// 事前アンケートが付ける pre=1 があれば回答済み
+	if (params.get('pre') === '1') { if (id) safeSet(PRE_KEY, id); return; }
+	// 同じパソコンを複数の参加者が使っても混ざらないよう、回答済みのIDと一致するときだけスキップ
+	if (id && safeGet(PRE_KEY) === id) return;
 	location.replace(CONFIG.preUrl + (CONFIG.preUrl.includes('?') ? '&' : '?') + 'id=' + encodeURIComponent(id));
 })();
 
